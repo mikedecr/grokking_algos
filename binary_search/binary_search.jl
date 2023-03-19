@@ -1,3 +1,5 @@
+using BenchmarkTools
+
 function iterative_binary_search(input, target)
     low = 1
     high = length(input)
@@ -16,21 +18,7 @@ function iterative_binary_search(input, target)
     return nothing
 end
 
-function verbose_recursive_binary_search(input, target, low = 1, high = length(input))
-    if low > high return nothing end
-    mid = div(low + high, 2)
-    guess = input[mid]
-    if input[mid] == target
-        return mid
-    elseif target < guess
-        return verbose_recursive_binary_search(input, target, low, high - 1)
-    else
-        return verbose_recursive_binary_search(input, target, low + 1, high)
-    end
-end
-
 function recursive_binary_search(input, target)
-    print("Input: " * string(input) * "\n")
     len = length(input)
     if len == 0
         return nothing
@@ -39,8 +27,6 @@ function recursive_binary_search(input, target)
     end
     mid = div(len + 1, 2)
     guess = input[mid]
-    print("Mid: " * string(mid) * "\n")
-    print("Guess: " * string(guess) * "\n")
     if guess == target
         return mid
     elseif guess > target
@@ -57,5 +43,32 @@ function test_bsearch(func, input, target)
     bsearch_answer = func(input, target)
     return answer, bsearch_answer
 end
+
+
+test_bsearch(iterative_binary_search, 1:1000, -1)
+test_bsearch(iterative_binary_search, 1:1000, 1)
+test_bsearch(iterative_binary_search, 1:1000, 67)
+test_bsearch(iterative_binary_search, 1:1000, 1000)
+test_bsearch(iterative_binary_search, 1:3:1000, 1)
+test_bsearch(iterative_binary_search, 1:3:1000, 1000)
+test_bsearch(iterative_binary_search, 1:3:1000, 1010)
+test_bsearch(iterative_binary_search, 1:3:1000, -2)
+test_bsearch(iterative_binary_search, 1:3:1000, 3)
+
+test_bsearch(recursive_binary_search, 1:1000, -1)
+test_bsearch(recursive_binary_search, 1:1000, 1)
+test_bsearch(recursive_binary_search, 1:1000, 67)
+test_bsearch(recursive_binary_search, 1:1000, 1000)
+test_bsearch(recursive_binary_search, 1:3:1000, 1)
+test_bsearch(recursive_binary_search, 1:3:1000, 1000)
+test_bsearch(recursive_binary_search, 1:3:1000, 1010)
+test_bsearch(recursive_binary_search, 1:3:1000, -2)
+test_bsearch(recursive_binary_search, 1:3:1000, 3)
+
+const domain = 1:1000
+const target = 11
+
+@benchmark(recursive_binary_search(1:1000, target))
+@benchmark(iterative_binary_search(1:1000, target))
 
 
